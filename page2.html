@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Surprise 🎉</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #ffdde1, #ee9ca7);
+      overflow: hidden;
+    }
+    .count {
+      animation: zoom 1s ease-in-out;
+    }
+    @keyframes zoom {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .fade-in {
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .photo-frame {
+      border: 5px solid white;
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: transform 0.5s;
+    }
+    .photo-frame:hover {
+      transform: scale(1.1) rotate(2deg);
+      box-shadow: 0 0 20px rgba(255,255,255,0.8);
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center text-center min-h-screen">
+
+  <div id="countdown" class="text-7xl font-extrabold text-white mb-10"></div>
+
+  <div id="wish" class="hidden text-3xl text-white font-semibold space-y-4">
+    <p>🎉 Happy Birthday, my love! You make my world shine brighter every day 💕</p>
+    <p>🌸 Wishing you endless happiness, laughter, and love always 🎂</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+      <div class="photo-frame"><img src="images/photo1.jpg" alt="photo1" class="w-full h-60 object-cover"></div>
+      <div class="photo-frame"><img src="images/photo2.jpg" alt="photo2" class="w-full h-60 object-cover"></div>
+      <div class="photo-frame"><img src="images/photo3.jpg" alt="photo3" class="w-full h-60 object-cover"></div>
+      <div class="photo-frame"><img src="images/photo4.jpg" alt="photo4" class="w-full h-60 object-cover"></div>
+      <div class="photo-frame"><img src="images/photo5.jpg" alt="photo5" class="w-full h-60 object-cover"></div>
+    </div>
+  </div>
+
+  <!-- 🎵 Background Music -->
+  <audio id="bgMusic" src="music\a.mp3" preload="auto"></audio>
+
+  <!-- 🎊 Confetti Script -->
+  <script>
+    // Simple confetti generator
+    function startConfetti() {
+      const duration = 6000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0, 1), y: Math.random() - 0.2 }
+        }));
+      }, 250);
+    }
+  </script>
+
+  <!-- 🎊 Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    let count = 3;
+    const countdown = document.getElementById('countdown');
+    const wish = document.getElementById('wish');
+    const music = document.getElementById('bgMusic');
+
+    function showCount() {
+      if (count > 0) {
+        countdown.innerHTML = count;
+        countdown.classList.add('count');
+        setTimeout(() => {
+          count--;
+          countdown.classList.remove('count');
+          showCount();
+        }, 1000);
+      } else {
+        countdown.style.display = 'none';
+        wish.classList.remove('hidden');
+        wish.classList.add('fade-in');
+        music.play().catch(e => console.log("Autoplay blocked"));
+        startConfetti();
+      }
+    }
+
+    window.onload = showCount;
+  </script>
+</body>
+</html>
